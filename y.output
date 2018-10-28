@@ -1,0 +1,655 @@
+Terminals which are not used
+
+   TK_NOTIN
+
+
+Grammar
+
+    0 $accept: expr_list $end
+
+    1 expr_list: expr
+    2          | expr_list ',' expr
+
+    3 expr: literal_value
+    4     | expr cmp_op expr
+    5     | expr TK_AND expr
+    6     | expr TK_OR expr
+    7     | expr TK_BETWEEN '[' expr ',' expr ']'
+    8     | function_name '(' expr_list ')'
+    9     | '(' expr ')'
+   10     | expr TK_IN '(' expr_list ')'
+   11     | expr TK_NOT TK_IN '(' expr_list ')'
+
+   12 cmp_op: TK_EQ
+   13       | TK_NE
+   14       | TK_GT
+   15       | TK_LT
+   16       | TK_GE
+   17       | TK_LE
+
+   18 literal_value: TK_INT_LITERAL
+   19              | TK_DOUBLE_LITERAL
+   20              | TK_STRING_LITERAL
+
+   21 function_name: TK_MD5MOD
+   22              | TK_STRCMP
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 8 9 10 11
+')' (41) 8 9 10 11
+',' (44) 2 7
+'[' (91) 7
+']' (93) 7
+error (256)
+TK_AND (258) 5
+TK_OR (259) 6
+TK_BETWEEN (260) 7
+TK_LE (261) 17
+TK_GE (262) 16
+TK_LT (263) 15
+TK_GT (264) 14
+TK_NE (265) 13
+TK_EQ (266) 12
+TK_NOT (267) 11
+TK_IN (268) 10 11
+BINOPX (269)
+TK_NOTIN (270)
+TK_INT_LITERAL (271) 18
+TK_DOUBLE_LITERAL (272) 19
+TK_STRING_LITERAL (273) 20
+TK_MD5MOD (274) 21
+TK_STRCMP (275) 22
+
+
+Nonterminals, with rules where they appear
+
+$accept (26)
+    on left: 0
+expr_list (27)
+    on left: 1 2, on right: 0 2 8 10 11
+expr (28)
+    on left: 3 4 5 6 7 8 9 10 11, on right: 1 2 4 5 6 7 9 10 11
+cmp_op (29)
+    on left: 12 13 14 15 16 17, on right: 4
+literal_value (30)
+    on left: 18 19 20, on right: 3
+function_name (31)
+    on left: 21 22, on right: 8
+
+
+state 0
+
+    0 $accept: . expr_list $end
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr_list      go to state 7
+    expr           go to state 8
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 1
+
+   18 literal_value: TK_INT_LITERAL .
+
+    $default  reduce using rule 18 (literal_value)
+
+
+state 2
+
+   19 literal_value: TK_DOUBLE_LITERAL .
+
+    $default  reduce using rule 19 (literal_value)
+
+
+state 3
+
+   20 literal_value: TK_STRING_LITERAL .
+
+    $default  reduce using rule 20 (literal_value)
+
+
+state 4
+
+   21 function_name: TK_MD5MOD .
+
+    $default  reduce using rule 21 (function_name)
+
+
+state 5
+
+   22 function_name: TK_STRCMP .
+
+    $default  reduce using rule 22 (function_name)
+
+
+state 6
+
+    9 expr: '(' . expr ')'
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 11
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 7
+
+    0 $accept: expr_list . $end
+    2 expr_list: expr_list . ',' expr
+
+    $end  shift, and go to state 12
+    ','   shift, and go to state 13
+
+
+state 8
+
+    1 expr_list: expr .
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_AND      shift, and go to state 14
+    TK_OR       shift, and go to state 15
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+
+    $default  reduce using rule 1 (expr_list)
+
+    cmp_op  go to state 25
+
+
+state 9
+
+    3 expr: literal_value .
+
+    $default  reduce using rule 3 (expr)
+
+
+state 10
+
+    8 expr: function_name . '(' expr_list ')'
+
+    '('  shift, and go to state 26
+
+
+state 11
+
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+    9     | '(' expr . ')'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_AND      shift, and go to state 14
+    TK_OR       shift, and go to state 15
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+    ')'         shift, and go to state 27
+
+    cmp_op  go to state 25
+
+
+state 12
+
+    0 $accept: expr_list $end .
+
+    $default  accept
+
+
+state 13
+
+    2 expr_list: expr_list ',' . expr
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 28
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 14
+
+    5 expr: expr TK_AND . expr
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 29
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 15
+
+    6 expr: expr TK_OR . expr
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 30
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 16
+
+    7 expr: expr TK_BETWEEN . '[' expr ',' expr ']'
+
+    '['  shift, and go to state 31
+
+
+state 17
+
+   17 cmp_op: TK_LE .
+
+    $default  reduce using rule 17 (cmp_op)
+
+
+state 18
+
+   16 cmp_op: TK_GE .
+
+    $default  reduce using rule 16 (cmp_op)
+
+
+state 19
+
+   15 cmp_op: TK_LT .
+
+    $default  reduce using rule 15 (cmp_op)
+
+
+state 20
+
+   14 cmp_op: TK_GT .
+
+    $default  reduce using rule 14 (cmp_op)
+
+
+state 21
+
+   13 cmp_op: TK_NE .
+
+    $default  reduce using rule 13 (cmp_op)
+
+
+state 22
+
+   12 cmp_op: TK_EQ .
+
+    $default  reduce using rule 12 (cmp_op)
+
+
+state 23
+
+   11 expr: expr TK_NOT . TK_IN '(' expr_list ')'
+
+    TK_IN  shift, and go to state 32
+
+
+state 24
+
+   10 expr: expr TK_IN . '(' expr_list ')'
+
+    '('  shift, and go to state 33
+
+
+state 25
+
+    4 expr: expr cmp_op . expr
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 34
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 26
+
+    8 expr: function_name '(' . expr_list ')'
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr_list      go to state 35
+    expr           go to state 8
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 27
+
+    9 expr: '(' expr ')' .
+
+    $default  reduce using rule 9 (expr)
+
+
+state 28
+
+    2 expr_list: expr_list ',' expr .
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_AND      shift, and go to state 14
+    TK_OR       shift, and go to state 15
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+
+    $default  reduce using rule 2 (expr_list)
+
+    cmp_op  go to state 25
+
+
+state 29
+
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    5     | expr TK_AND expr .
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_OR       shift, and go to state 15
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+
+    $default  reduce using rule 5 (expr)
+
+    cmp_op  go to state 25
+
+
+state 30
+
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    6     | expr TK_OR expr .
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+
+    $default  reduce using rule 6 (expr)
+
+    cmp_op  go to state 25
+
+
+state 31
+
+    7 expr: expr TK_BETWEEN '[' . expr ',' expr ']'
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 36
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 32
+
+   11 expr: expr TK_NOT TK_IN . '(' expr_list ')'
+
+    '('  shift, and go to state 37
+
+
+state 33
+
+   10 expr: expr TK_IN '(' . expr_list ')'
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr_list      go to state 38
+    expr           go to state 8
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 34
+
+    4 expr: expr . cmp_op expr
+    4     | expr cmp_op expr .
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    $default  reduce using rule 4 (expr)
+
+    cmp_op  go to state 25
+
+
+state 35
+
+    2 expr_list: expr_list . ',' expr
+    8 expr: function_name '(' expr_list . ')'
+
+    ','  shift, and go to state 13
+    ')'  shift, and go to state 39
+
+
+state 36
+
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+    7     | expr TK_BETWEEN '[' expr . ',' expr ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_AND      shift, and go to state 14
+    TK_OR       shift, and go to state 15
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+    ','         shift, and go to state 40
+
+    cmp_op  go to state 25
+
+
+state 37
+
+   11 expr: expr TK_NOT TK_IN '(' . expr_list ')'
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr_list      go to state 41
+    expr           go to state 8
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 38
+
+    2 expr_list: expr_list . ',' expr
+   10 expr: expr TK_IN '(' expr_list . ')'
+
+    ','  shift, and go to state 13
+    ')'  shift, and go to state 42
+
+
+state 39
+
+    8 expr: function_name '(' expr_list ')' .
+
+    $default  reduce using rule 8 (expr)
+
+
+state 40
+
+    7 expr: expr TK_BETWEEN '[' expr ',' . expr ']'
+
+    TK_INT_LITERAL     shift, and go to state 1
+    TK_DOUBLE_LITERAL  shift, and go to state 2
+    TK_STRING_LITERAL  shift, and go to state 3
+    TK_MD5MOD          shift, and go to state 4
+    TK_STRCMP          shift, and go to state 5
+    '('                shift, and go to state 6
+
+    expr           go to state 43
+    literal_value  go to state 9
+    function_name  go to state 10
+
+
+state 41
+
+    2 expr_list: expr_list . ',' expr
+   11 expr: expr TK_NOT TK_IN '(' expr_list . ')'
+
+    ','  shift, and go to state 13
+    ')'  shift, and go to state 44
+
+
+state 42
+
+   10 expr: expr TK_IN '(' expr_list ')' .
+
+    $default  reduce using rule 10 (expr)
+
+
+state 43
+
+    4 expr: expr . cmp_op expr
+    5     | expr . TK_AND expr
+    6     | expr . TK_OR expr
+    7     | expr . TK_BETWEEN '[' expr ',' expr ']'
+    7     | expr TK_BETWEEN '[' expr ',' expr . ']'
+   10     | expr . TK_IN '(' expr_list ')'
+   11     | expr . TK_NOT TK_IN '(' expr_list ')'
+
+    TK_AND      shift, and go to state 14
+    TK_OR       shift, and go to state 15
+    TK_BETWEEN  shift, and go to state 16
+    TK_LE       shift, and go to state 17
+    TK_GE       shift, and go to state 18
+    TK_LT       shift, and go to state 19
+    TK_GT       shift, and go to state 20
+    TK_NE       shift, and go to state 21
+    TK_EQ       shift, and go to state 22
+    TK_NOT      shift, and go to state 23
+    TK_IN       shift, and go to state 24
+    ']'         shift, and go to state 45
+
+    cmp_op  go to state 25
+
+
+state 44
+
+   11 expr: expr TK_NOT TK_IN '(' expr_list ')' .
+
+    $default  reduce using rule 11 (expr)
+
+
+state 45
+
+    7 expr: expr TK_BETWEEN '[' expr ',' expr ']' .
+
+    $default  reduce using rule 7 (expr)
