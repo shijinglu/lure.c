@@ -1,7 +1,3 @@
-
-//
-//  main.c
-//  eval
 //
 //  Created by Shijing Lu on 10/1/18.
 //  Copyright © 2018 shijing. All rights reserved.
@@ -39,18 +35,12 @@ void expect(bool expectTrue, char *s, int nCtx, ...) {
     hashmap_free(ctxMap);
 }
 
-void setCtxInt(Context *ctx, char *key, int val) {
-    ctx->key = key;
-    ctx->dataType = DataInt;
-    ctx->data.intVal = val;
-}
-
 void test_case_sensitivity() {
     printf(ANSI_COLOR_YELLOW
            "\n################# Test Case Sensitivity "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx;
-    setCtxInt(&ctx, "USER_ID", 123);
+    setIntContext(&ctx, "USER_ID", 123);
     expect(true, "USER_ID == 123", 1, &ctx);
     expect(false, "user_id == 123", 1, &ctx);
 }
@@ -60,7 +50,8 @@ void test_int() {
            "\n################# Test Integer Value Context "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx, ctx2;
-    setCtxInt(&ctx, "USER_ID", 123);
+    
+    setIntContext(&ctx, "USER_ID", 123);
     expect(true, "USER_ID == 123", 1, &ctx);
     expect(true, "USER_ID >= 123", 1, &ctx);
     expect(true, "USER_ID <= 123", 1, &ctx);
@@ -87,7 +78,7 @@ void test_int() {
     expect(false, "USER_ID between [124, 125]", 1, &ctx);
     expect(false, "USER_ID between [120, 122]", 1, &ctx);
 
-    setCtxInt(&ctx2, "ZERO_INT", 0);
+    setIntContext(&ctx2, "ZERO_INT", 0);
     expect(true, "USER_ID AND USER_ID", 2, &ctx, &ctx2);
     expect(true, "USER_ID OR ZERO_INT", 2, &ctx, &ctx2);
     expect(false, "USER_ID AND ZERO_INT", 2, &ctx, &ctx2);
@@ -99,18 +90,12 @@ void test_int() {
     expect(false, "USER_ID == 122 || ZERO_INT == 1", 2, &ctx, &ctx2);
 }
 
-void setCtxDouble(Context *ctx, char *key, double val) {
-    ctx->key = key;
-    ctx->dataType = DataDouble;
-    ctx->data.doubleVal = val;
-}
-
 void test_double() {
     printf(ANSI_COLOR_YELLOW
-           "\n################# Test Integer Value Context "
+           "\n################# Test Double Value Context "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx, ctx2;
-    setCtxDouble(&ctx, "PI", 3.14);
+    setDoubleContext(&ctx, "PI", 3.14);
     expect(true, "PI == 3.140", 1, &ctx);
     expect(true, "PI >= 3.140", 1, &ctx);
     expect(true, "PI <= 3.140", 1, &ctx);
@@ -133,7 +118,7 @@ void test_double() {
     expect(false, "PI between [3.141, 3.150]", 1, &ctx);
     expect(false, "PI between [3.120, 3.130]", 1, &ctx);
 
-    setCtxDouble(&ctx2, "ZERO_REAL", 0.0);
+    setDoubleContext(&ctx2, "ZERO_REAL", 0.0);
     expect(true, "PI AND PI", 2, &ctx, &ctx2);
     expect(true, "PI OR ZERO_REAL", 2, &ctx, &ctx2);
     expect(false, "PI AND ZERO_REAL", 2, &ctx, &ctx2);
@@ -152,10 +137,11 @@ void setCtxString(Context *ctx, char *key, char *s) {
 }
 void test_string() {
     printf(ANSI_COLOR_YELLOW
-           "\n################# Test Integer Value Context "
+           "\n################# Test String Value Context "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx, ctx2;
     setCtxString(&ctx, "USER_TAGS", "admin");
+    setStringContext(&ctx, "USER_TAGS", "admin");
     expect(true, "USER_TAGS == admin", 1, &ctx);
     expect(true, "USER_TAGS >= admin", 1, &ctx);
     expect(true, "USER_TAGS <= admin", 1, &ctx);
@@ -180,7 +166,7 @@ void test_string() {
     expect(false, "USER_TAGS between [admio, admip]", 1, &ctx);
     expect(false, "USER_TAGS between [admia, admib]", 1, &ctx);
 
-    setCtxString(&ctx2, "EMPTY_STR", "");
+    setStringContext(&ctx2, "EMPTY_STR", "");
     expect(true, "USER_TAGS AND USER_TAGS", 2, &ctx, &ctx2);
     expect(true, "USER_TAGS OR EMPTY_STR", 2, &ctx, &ctx2);
     expect(false, "USER_TAGS AND EMPTY_STR", 2, &ctx, &ctx2);
@@ -206,7 +192,7 @@ void test_version() {
            "\n################# Test Eval With Version Type "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx, ctx2;
-    setCtxVersion(&ctx, "APP_VERSION", 3, 2, 1);
+    setCustomContext(&ctx, "APP_VERSION", "v3.2.1", "semver");
     expect(true, "APP_VERSION == v3.2.1", 1, &ctx);
     expect(true, "APP_VERSION >= v3.2.1", 1, &ctx);
     expect(true, "APP_VERSION <= v3.2.1", 1, &ctx);
@@ -231,6 +217,7 @@ void test_version() {
     expect(false, "APP_VERSION between [v3.1.9, v3.2.0]", 1, &ctx);
     expect(false, "APP_VERSION between [v3.2.9, v3.3.0]", 1, &ctx);
 
+    setCustomContext(&ctx2, "ZERO_VERSION", "v0.0.0", "semver");
     setCtxVersion(&ctx2, "ZERO_VERSION", 0, 0, 0);
     expect(true, "APP_VERSION AND APP_VERSION", 2, &ctx, &ctx2);
     expect(true, "APP_VERSION OR ZERO_VERSION", 2, &ctx, &ctx2);

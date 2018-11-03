@@ -1,3 +1,8 @@
+//
+//  Created by Shijing Lu on 11/3/18.
+//  Copyright © 2018 OpenAB. All rights reserved.
+//
+
 #include "lure.h"
 #include <assert.h>
 #include <ctype.h>
@@ -1051,6 +1056,75 @@ bool evalInternal(map_t ctx, Expr *root, int *err, bool noDerive) {
     }
     return false;
 }
+
+/**
+ * Set String Context, e.g. USER_NAME: "Alice"
+ * NOTE: this setter does not free space, make sure ctx is empty before calling this.
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. USER_NAME.
+ * @param val value of the context
+ */
+void setStringContext(Context* ctx, char *key, char *val) {
+    assert(ctx);
+    ctx->key = strconcat(1, key);
+    ctx->data.stringVal = strconcat(1, val);
+    ctx->dataType = DataString;
+}
+
+/**
+ * Set Integer Context, e.g. CITY_ID: 1
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. CITY_ID.
+ * @param val value of the context
+ */
+void setIntContext(Context *ctx, char *key,  int val) {
+    assert(ctx);
+    ctx->key = strconcat(1, key);
+    ctx->data.intVal = val;
+    ctx->dataType = DataInt;
+}
+
+/**
+ * Set Double Context, e.g. PVALUE: 0.5
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. PVALUE
+ * @param val value of the context
+ */
+void setDoubleContext(Context *ctx, char *key,  double val) {
+    assert(ctx);
+    ctx->key = strconcat(1, key);
+    ctx->data.doubleVal = val;
+    ctx->dataType = DataDouble;
+}
+
+/**
+ * Set boolean Context, e.g. SWITCH_ON: true
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. SWITCH_ON.
+ * @param val value of the context
+ */
+void setBoolContext(Context *ctx, char *key,  bool val) {
+    assert(ctx);
+    ctx->key = strconcat(1, key);
+    ctx->data.boolVal = val;
+    ctx->dataType = DataBool;
+}
+
+/**
+ * Set Custom Context, e.g. APP_VERSION: v3.2.1/semver
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. APP_VERSION.
+ * @param val value of the context
+ * @param typeDesc a string to find the right extension, e.g "semver"
+ */
+void setCustomContext(Context *ctx, char *key,  char *val, char *typeDesc) {
+    assert(ctx);
+    ctx->key = strconcat(1, key);
+    ctx->data.stringVal = strconcat(1, val);
+    ctx->dataType = DataCustom;
+    ctx->customDataType = strconcat(1, typeDesc);
+}
+
 
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 extern int yyparse(ExprList **rootExprList);

@@ -1,4 +1,9 @@
-#if !defined(__LURE_EXTENSION_H__)
+//
+//  Created by Shijing Lu on 11/3/18.
+//  Copyright © 2018 OpenAB. All rights reserved.
+//
+
+#ifndef __LURE_EXTENSION_H__
 #define __LURE_EXTENSION_H__
 
 #include <stdbool.h>

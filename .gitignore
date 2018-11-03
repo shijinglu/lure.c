@@ -2,8 +2,8 @@
 .vscode
 */lure
 # test projects
-c/parsing/parsing.xcodeproj/
-c/eval/eval.xcodeproj/
+parsing/
+eval/
 
 ################# C++ ######################
 # Prerequisites

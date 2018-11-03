@@ -1,3 +1,8 @@
+//
+//  Created by Shijing Lu on 11/3/18.
+//  Copyright © 2018 OpenAB. All rights reserved.
+//
+
 #ifndef __LURE_H__
 #define __LURE_H__
 
@@ -19,6 +24,7 @@ typedef struct ExprList ExprList;
 typedef struct Context Context;
 typedef struct SemVer SemVer;
 typedef struct ContextExtension ContextExtension;
+typedef struct ContextBuilder ContextBuilder;
 
 /* All supported data types. */
 typedef enum {
@@ -81,6 +87,53 @@ struct Context {
     void *customData;     /* store casted customized data to avoid duplicatd casting. */
     DataValue data;
 };
+
+/**
+ * Set String Context, e.g. USER_NAME: "Alice"
+ * NOTE: this setter does not free space, make sure ctx is empty before calling this.
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. USER_NAME.
+ * @param val value of the context
+ */
+void setStringContext(Context* ctx, char *key, char *val);
+
+/**
+ * Set Integer Context, e.g. CITY_ID: 1
+ * NOTE: this setter does not free space, make sure ctx is empty before calling this.
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. CITY_ID.
+ * @param val value of the context
+ */
+void setIntContext(Context *ctx, char *key,  int val);
+
+/**
+ * Set Double Context, e.g. PVALUE: 0.5
+ * NOTE: this setter does not free space, make sure ctx is empty before calling this.
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. PVALUE
+ * @param val value of the context
+ */
+void setDoubleContext(Context *ctx, char *key,  double val);
+
+/**
+ * Set boolean Context, e.g. SWITCH_ON: true
+ * NOTE: this setter does not free space, make sure ctx is empty before calling this.
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. SWITCH_ON.
+ * @param val value of the context
+ */
+void setBoolContext(Context *ctx, char *key,  bool val);
+
+/**
+ * Set Custom Context, e.g. APP_VERSION: v3.2.1/semver
+ * NOTE: this setter does not free space, make sure ctx is empty before calling this.
+ * @param ctx context object to be set
+ * @param key case sensitive context key, e.g. APP_VERSION.
+ * @param val value of the context
+ * @param typeDesc a string to find the right extension, e.g "semver"
+ */
+void setCustomContext(Context *ctx, char *key,  char *val, char *typeDesc);
+
 
 #define Err_EmptyNode 0x000001       /* Expr root is NULL */
 #define Err_IrreducibleNode 0x000002 /* node is irreducible such as a hanging literal. */

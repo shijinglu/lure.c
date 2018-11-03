@@ -1,3 +1,8 @@
+//
+//  Created by Shijing Lu on 11/3/18.
+//  Copyright © 2018 OpenAB. All rights reserved.
+//
+
 #include "lure_extension.h"
 #include <ctype.h>
 #include <stdlib.h>
