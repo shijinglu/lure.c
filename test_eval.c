@@ -50,7 +50,7 @@ void test_int() {
            "\n################# Test Integer Value Context "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx, ctx2;
-    
+
     setIntContext(&ctx, "USER_ID", 123);
     expect(true, "USER_ID == 123", 1, &ctx);
     expect(true, "USER_ID >= 123", 1, &ctx);
@@ -130,17 +130,11 @@ void test_double() {
     expect(false, "PI == 3.141 || ZERO_REAL == 1", 2, &ctx, &ctx2);
 }
 
-void setCtxString(Context *ctx, char *key, char *s) {
-    ctx->key = key;
-    ctx->dataType = DataString;
-    ctx->data.stringVal = s;
-}
 void test_string() {
     printf(ANSI_COLOR_YELLOW
            "\n################# Test String Value Context "
            "#################\n" ANSI_COLOR_RESET);
     Context ctx, ctx2;
-    setCtxString(&ctx, "USER_TAGS", "admin");
     setStringContext(&ctx, "USER_TAGS", "admin");
     expect(true, "USER_TAGS == admin", 1, &ctx);
     expect(true, "USER_TAGS >= admin", 1, &ctx);
@@ -178,15 +172,6 @@ void test_string() {
     expect(false, "USER_TAGS == admio || EMPTY_STR == 'x'", 2, &ctx, &ctx2);
 }
 
-void setCtxVersion(Context *ctx, char *key, int major, int minor, int patch) {
-    ctx->key = key;
-    ctx->dataType = DataCustom;
-    ctx->customDataType = "semver";
-    ctx->customData = NULL;
-    ctx->data.stringVal = (char *)malloc(sizeof(char) * 32);
-    sprintf(ctx->data.stringVal, "v%d.%d.%d", major, minor, patch);
-}
-
 void test_version() {
     printf(ANSI_COLOR_YELLOW
            "\n################# Test Eval With Version Type "
@@ -218,7 +203,6 @@ void test_version() {
     expect(false, "APP_VERSION between [v3.2.9, v3.3.0]", 1, &ctx);
 
     setCustomContext(&ctx2, "ZERO_VERSION", "v0.0.0", "semver");
-    setCtxVersion(&ctx2, "ZERO_VERSION", 0, 0, 0);
     expect(true, "APP_VERSION AND APP_VERSION", 2, &ctx, &ctx2);
     expect(true, "APP_VERSION OR ZERO_VERSION", 2, &ctx, &ctx2);
     expect(false, "APP_VERSION AND ZERO_VERSION", 2, &ctx, &ctx2);
@@ -230,13 +214,28 @@ void test_version() {
     expect(true, "APP_VERSION == v3.2.1 || ZERO_VERSION == v0.0.0", 2, &ctx, &ctx2);
     expect(false, "APP_VERSION == v3.2.0 || ZERO_VERSION == v0.1.0", 2, &ctx, &ctx2);
 }
+
+void test_mix() {
+    Context ctxInt, ctxBool, ctxDouble, ctxString, ctxVer;
+    setStringContext(&ctxString, "USER_TAGS", "admin");
+    setIntContext(&ctxInt, "USER_ID", 123);
+    setCustomContext(&ctxVer, "APP_VERSION", "v3.2.1", "semver");
+    setDoubleContext(&ctxDouble, "PI", 3.14);
+    setBoolContext(&ctxBool, "SWITCH", true);
+    expect(true,
+           "USER_TAGS IN (admin, tester) && USER_ID < 125 && APP_VERSION == v3.2.1 && PI == 3.14 && SWITCH == true", 5,
+           &ctxBool, &ctxInt, &ctxDouble, &ctxString, &ctxVer);
+}
+
 int main(int argc, const char *argv[]) {
     // insert code here...
     install();
+    test_memory();
     test_version();
     test_string();
     test_double();
     test_int();
     test_case_sensitivity();
+
     return 0;
 }
