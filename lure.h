@@ -8,6 +8,7 @@
 
 #include <stdbool.h>
 #include "hashmap.h"
+#include "lure_public.h"
 
 /* length limit for legic string literal (an identifier or a quoted string) */
 #define MAX_IDENTIFIER_LENGTH 256
@@ -17,14 +18,6 @@
 
 /* default length of expression list. */
 #define DEFAULT_EXPR_LIST_LENGTH 4
-
-/** Forward struct defs*/
-typedef struct Expr Expr;
-typedef struct ExprList ExprList;
-typedef struct Context Context;
-typedef struct SemVer SemVer;
-typedef struct ContextExtension ContextExtension;
-typedef struct ContextBuilder ContextBuilder;
 
 /* All supported data types. */
 typedef enum {
@@ -88,51 +81,7 @@ struct Context {
     DataValue data;
 };
 
-/**
- * Set String Context, e.g. USER_NAME: "Alice"
- * NOTE: this setter does not free space, make sure ctx is empty before calling this.
- * @param ctx context object to be set
- * @param key case sensitive context key, e.g. USER_NAME.
- * @param val value of the context
- */
-void setStringContext(Context* ctx, char *key, char *val);
 
-/**
- * Set Integer Context, e.g. CITY_ID: 1
- * NOTE: this setter does not free space, make sure ctx is empty before calling this.
- * @param ctx context object to be set
- * @param key case sensitive context key, e.g. CITY_ID.
- * @param val value of the context
- */
-void setIntContext(Context *ctx, char *key,  int val);
-
-/**
- * Set Double Context, e.g. PVALUE: 0.5
- * NOTE: this setter does not free space, make sure ctx is empty before calling this.
- * @param ctx context object to be set
- * @param key case sensitive context key, e.g. PVALUE
- * @param val value of the context
- */
-void setDoubleContext(Context *ctx, char *key,  double val);
-
-/**
- * Set boolean Context, e.g. SWITCH_ON: true
- * NOTE: this setter does not free space, make sure ctx is empty before calling this.
- * @param ctx context object to be set
- * @param key case sensitive context key, e.g. SWITCH_ON.
- * @param val value of the context
- */
-void setBoolContext(Context *ctx, char *key,  bool val);
-
-/**
- * Set Custom Context, e.g. APP_VERSION: v3.2.1/semver
- * NOTE: this setter does not free space, make sure ctx is empty before calling this.
- * @param ctx context object to be set
- * @param key case sensitive context key, e.g. APP_VERSION.
- * @param val value of the context
- * @param typeDesc a string to find the right extension, e.g "semver"
- */
-void setCustomContext(Context *ctx, char *key,  char *val, char *typeDesc);
 
 
 #define Err_EmptyNode 0x000001       /* Expr root is NULL */
@@ -154,10 +103,10 @@ char *descOfOp(int opcode);
 /** Reducing functions */
 ExprList *exprListOfExpr(Expr *xp);
 ExprList *exprListAppend(ExprList *xpList, Expr *xp);
-ExprList *newExprList();
+ExprList *newExprList(void);
 void freeExprList(ExprList *xpList);
 
-Expr *newExpr();
+Expr *newExpr(void);
 void freeExpr(Expr *xp);
 Expr *exprLiteral(Expr *xpLiteral);
 Expr *exprUnaryOp(int uop, Expr *xp);
@@ -176,16 +125,10 @@ int getIntData(Expr *expr);
 double getDoubleData(Expr *expr);
 void *getGenericData(Expr *expr);
 
-/* evaluate expression with ctx, return false in case of error. */
-bool eval(map_t ctx, Expr *root);
-
 /* evaluate expression with ctx, and track errors. */
 bool evalInternal(map_t ctx, Expr *root, int *err, bool noDerive);
 
 /* compile string into expr list (top most rule). */
 ExprList *compileList(char *s);
-
-/* compile string into expr, assuming there is only one expr. */
-Expr *compile(char *s);
 
 #endif

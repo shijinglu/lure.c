@@ -230,7 +230,7 @@ void test_mix() {
 int main(int argc, const char *argv[]) {
     // insert code here...
     install();
-    test_memory();
+    test_mix();
     test_version();
     test_string();
     test_double();

@@ -33,6 +33,6 @@ struct ContextExtension {
 };
 
 /* This should be run once to install extensions. */
-void install();
+void install(void);
 
 #endif /* __LURE_EXTENSION_H__ */

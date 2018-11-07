@@ -9,7 +9,7 @@ LDFLAGS :=
 ########################
 
 # -MMD generates dependencies while compiling
-CFLAGS += -MMD
+CFLAGS += -MMD -Wall
 CC := gcc
 
 lex.yy.c y.tab.h:
