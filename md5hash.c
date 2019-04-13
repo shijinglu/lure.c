@@ -137,7 +137,9 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
             uint32_t temp = d;
             d = c;
             c = b;
+#ifdef DEBUG
             printf("rotateLeft(%x + %x + %x + %x, %d)\n", a, f, k[i], w[g], r[i]);
+#endif
             b = b + LEFTROTATE((a + f + k[i] + w[g]), r[i]);
             a = temp;
 
@@ -160,11 +162,13 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
 }
 
 uint64_t md5str(char *initial_msg, size_t initial_len) {
-    uint8_t *unsigned_msg = (uint8_t *)malloc(sizeof(char) * initial_len);
-
-    for(size_t i = 0; i < initial_len; i++)
-    {
+    /*uint8_t *unsigned_msg = (uint8_t *)calloc(initial_len, sizeof(char));
+    for(size_t i = 0; i < initial_len; i++) {
         unsigned_msg[i] = (uint8_t)(initial_msg[i]);
     }
-    return md5(unsigned_msg, initial_len);
+    uint64_t ret =  md5((uint8_t *)unsigned_msg, initial_len); 
+    free(unsigned_msg); unsigned_msg = NULL;
+    return ret;
+    */
+    return md5((uint8_t *)initial_msg, initial_len);
 }

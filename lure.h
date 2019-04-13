@@ -35,7 +35,8 @@ typedef enum {
     EpFunction,
     EpBinOp,
     EpUnaryOp,
-    EpLiteral /* Literals, irreducibile leafs.  */
+    EpLiteral, /* Literals, irreducible leafs.  */
+    EpIdentity /* resolvable leafs */
 } EpType;
 
 typedef union LureDataT {
@@ -112,11 +113,13 @@ Expr *exprLiteral(Expr *xpLiteral);
 Expr *exprUnaryOp(int uop, Expr *xp);
 Expr *exprBinOp(Expr *xp1, int bop, Expr *xp2);
 Expr *exprBetween(Expr *xpLeft, Expr *xpLower, Expr *xpUpper);
+Expr *exprFunction0(char *fname);
 Expr *exprFunction(char *fname, ExprList *xpList);
 Expr *exprIn(Expr *xpLeft, int opInOrNot, ExprList *xpList);
 Expr *exprOfInt(int n);
 Expr *exprOfDouble(double n);
 Expr *exprOfString(char *s);
+Expr *exprOfIdentity(char *s);
 
 /* value getters */
 char *getStringData(Expr *expr);

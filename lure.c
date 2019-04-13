@@ -25,7 +25,7 @@
 
 Expr *newExpr() {
     LURE_LOG("newExpr");
-    Expr *xp = (Expr *)malloc(sizeof(Expr));
+    Expr *xp = (Expr *)calloc(1, sizeof(Expr));
     if (!xp) {
         LURE_LOG("failed to allocate expression node");
         exit(1);
@@ -69,14 +69,14 @@ void freeExpr(Expr *xp) {
 
 ExprList *newExprList() {
     LURE_LOG("newExprList");
-    ExprList *xpList = (ExprList *)malloc(sizeof(ExprList));
+    ExprList *xpList = (ExprList *)calloc(1, sizeof(ExprList));
     if (!xpList) {
         LURE_LOG("failed to allocate expression list");
         exit(1);
     }
     xpList->nExpr = DEFAULT_EXPR_LIST_LENGTH;
     xpList->key = NULL;
-    xpList->list = (Expr **)malloc(sizeof(Expr *) * DEFAULT_EXPR_LIST_LENGTH);
+    xpList->list = (Expr **)calloc(DEFAULT_EXPR_LIST_LENGTH, sizeof(Expr *));
     xpList->map = hashmap_new();
     xpList->capacity = DEFAULT_EXPR_LIST_LENGTH;
     for (size_t i = 0; i < xpList->capacity; i++) {
@@ -104,7 +104,7 @@ void freeExprList(ExprList *xpList) {
 
 Context *newContext() {
     LURE_LOG("newContext");
-    Context *ctx = (Context *)malloc(sizeof(Context));
+    Context *ctx = (Context *)calloc(1, sizeof(Context));
     if (!ctx) {
         LURE_LOG("failed to allocate expression list");
         return NULL;
@@ -231,8 +231,8 @@ bool parseSemVer(char *s, int (*ver)[3]) {
 char *descOfOp(int opcode) {
     LURE_LOG("descOfOp");
     switch (opcode) {
-        case TK_AND:
-            return "and";
+        case TK_AND_LOGIC:
+            return "&&";
         case TK_EQ:
             return "==";
         case TK_GE:
@@ -257,7 +257,7 @@ char *descOfOp(int opcode) {
             return "an integer";
         case TK_DOUBLE_LITERAL:
             return "a dobule";
-        case TK_OR:
+        case TK_OR_LOGIC:
             return "or";
         case TK_STRCMP:
             return "strcmp";
@@ -356,11 +356,24 @@ Expr *exprBetween(Expr *xpLeft, Expr *xpLower, Expr *xpUpper) {
     xpB->type = EpBinOp;
 
     Expr *xp = newExpr();
-    xp->op = TK_AND;
+    xp->op = TK_AND_LOGIC;
     xp->pLeft = xpA;
     xp->pRight = xpB;
-    xp->key = strconcat(5, xpA->key, " ", descOfOp(TK_AND), " ", xpB->key);
+    xp->key = strconcat(5, xpA->key, " ", descOfOp(TK_AND_LOGIC), " ", xpB->key);
     xp->type = EpBinOp;
+    logExpr(xp);
+    return xp;
+}
+
+Expr *exprFunction0(char *fname) {
+    LURE_LOG("");
+    Expr *xp = newExpr();
+    /*TODO: replace me with TK_FUNCTION*/
+    xp->pLeft = newExpr();
+    xp->pLeft = exprOfString(fname);
+    xp->pList = NULL;
+    xp->key = strconcat(4, fname, "( )");
+    xp->type = EpFunction;
     logExpr(xp);
     return xp;
 }
@@ -422,6 +435,18 @@ Expr *exprOfString(char *s) {
     logExpr(xp);
     return xp;
 }
+
+Expr *exprOfIdentity(char *s) {
+    LURE_LOG("");
+    Expr *xp = newExpr();
+    xp->key = strconcat(1, s);
+    xp->type = EpIdentity;
+    xp->dataType = DataString;
+    xp->data.stringVal = strconcat(1, s);
+    logExpr(xp);
+    return xp;
+}
+
 
 /* value getters */
 DataType getDataType(Expr *expr) {
@@ -687,9 +712,9 @@ bool evalBinaryOpCtx(Expr *xpLeft, Expr *xpRight, ExprList *xpList, ContextExten
             bool left = getBooleanData(xpLeft);
             bool right = typeCastBool(xpRight, err);
             switch (op) {
-                case TK_AND:
+                case TK_AND_LOGIC:
                     return left && right;
-                case TK_OR:
+                case TK_OR_LOGIC:
                     return left || right;
                 case TK_EQ:
                 case TK_GE:
@@ -720,9 +745,9 @@ bool evalBinaryOpCtx(Expr *xpLeft, Expr *xpRight, ExprList *xpList, ContextExten
             int left = getIntData(xpLeft);
             int right = typeCastInt(xpRight, err);
             switch (op) {
-                case TK_AND:
+                case TK_AND_LOGIC:
                     return left && right;
-                case TK_OR:
+                case TK_OR_LOGIC:
                     return left || right;
                 case TK_LE:
                     return left <= right;
@@ -756,9 +781,9 @@ bool evalBinaryOpCtx(Expr *xpLeft, Expr *xpRight, ExprList *xpList, ContextExten
             double left = getDoubleData(xpLeft);
             double right = typeCastDouble(xpRight, err);
             switch (op) {
-                case TK_AND:
+                case TK_AND_LOGIC:
                     return left && right;
-                case TK_OR:
+                case TK_OR_LOGIC:
                     return left || right;
                 case TK_LE:
                     return left <= right;
@@ -795,10 +820,10 @@ bool evalBinaryOpCtx(Expr *xpLeft, Expr *xpRight, ExprList *xpList, ContextExten
             int cmp = right == NULL ? 1 : strcmp(left, right);
             bool ret = false;
             switch (op) {
-                case TK_AND:
+                case TK_AND_LOGIC:
                     ret = left && right;
                     break;
-                case TK_OR:
+                case TK_OR_LOGIC:
                     ret = left || right;
                     break;
                 case TK_LE:
@@ -840,9 +865,9 @@ bool evalBinaryOpCtx(Expr *xpLeft, Expr *xpRight, ExprList *xpList, ContextExten
             assert(extPtr != NULL);
             int cmp = extPtr->cmp(xpLeft, xpRight);
             switch (op) {
-                case TK_AND:
+                case TK_AND_LOGIC:
                     return extPtr->toBool(xpLeft) && extPtr->toBool(xpRight);
-                case TK_OR:
+                case TK_OR_LOGIC:
                     return extPtr->toBool(xpLeft) || extPtr->toBool(xpRight);
                 case TK_LE:
                     return cmp <= 0;
@@ -918,7 +943,7 @@ bool resolveExpr(Expr *root, map_t ctxMap, map_t extMap) {
             free(root->derivedValue);
             root->derivedValue = NULL;
         }
-        root->derivedValue = (DataValue *)malloc(sizeof(DataValue));
+        root->derivedValue = (DataValue *)calloc(1, sizeof(DataValue));
     }
     /** resolving function has the highest priority. */
     if (isFunc) {
@@ -1030,9 +1055,9 @@ bool evalInternal(map_t ctx, Expr *root, int *err, bool noDerive) {
             bool leftRet = evalInternal(ctx, root->pLeft, err, false);
             bool rightRet = evalInternal(ctx, root->pRight, err, false);
             switch (root->op) {
-                case TK_AND:
-                case TK_OR: {
-                    return (root->op == TK_AND) ? (leftRet && rightRet) : (leftRet || rightRet);
+                case TK_AND_LOGIC:
+                case TK_OR_LOGIC: {
+                    return (root->op == TK_AND_LOGIC) ? (leftRet && rightRet) : (leftRet || rightRet);
                 }
                 case TK_BETWEEN:
                     /* should have been transformed into two binary ops*/

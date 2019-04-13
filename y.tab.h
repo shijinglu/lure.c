@@ -39,8 +39,8 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     TK_AND = 258,
-     TK_OR = 259,
+     TK_AND_LOGIC = 258,
+     TK_OR_LOGIC = 259,
      TK_BETWEEN = 260,
      TK_LE = 261,
      TK_GE = 262,
@@ -51,17 +51,19 @@
      TK_NOT = 267,
      TK_IN = 268,
      BINOPX = 269,
-     TK_NOTIN = 270,
-     TK_INT_LITERAL = 271,
-     TK_DOUBLE_LITERAL = 272,
-     TK_STRING_LITERAL = 273,
-     TK_MD5MOD = 274,
-     TK_STRCMP = 275
+     TK_AND_KEYWORD = 270,
+     TK_NOTIN = 271,
+     TK_INT_LITERAL = 272,
+     TK_DOUBLE_LITERAL = 273,
+     TK_STRING_LITERAL = 274,
+     TK_MD5MOD = 275,
+     TK_STRCMP = 276,
+     TK_IDENTITY_LITERAL = 277
    };
 #endif
 /* Tokens.  */
-#define TK_AND 258
-#define TK_OR 259
+#define TK_AND_LOGIC 258
+#define TK_OR_LOGIC 259
 #define TK_BETWEEN 260
 #define TK_LE 261
 #define TK_GE 262
@@ -72,12 +74,14 @@
 #define TK_NOT 267
 #define TK_IN 268
 #define BINOPX 269
-#define TK_NOTIN 270
-#define TK_INT_LITERAL 271
-#define TK_DOUBLE_LITERAL 272
-#define TK_STRING_LITERAL 273
-#define TK_MD5MOD 274
-#define TK_STRCMP 275
+#define TK_AND_KEYWORD 270
+#define TK_NOTIN 271
+#define TK_INT_LITERAL 272
+#define TK_DOUBLE_LITERAL 273
+#define TK_STRING_LITERAL 274
+#define TK_MD5MOD 275
+#define TK_STRCMP 276
+#define TK_IDENTITY_LITERAL 277
 
 
 
@@ -94,7 +98,7 @@ typedef union YYSTYPE
     ExprList *exprList;
 }
 /* Line 1529 of yacc.c.  */
-#line 98 "y.tab.h"
+#line 102 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

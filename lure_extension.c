@@ -60,8 +60,8 @@ bool semVerDerive(Expr *expr, DataValue *additionalData) {
     bool ok = parseSemVer(verStr, &ver);
     if (ok) {
         free(expr->derivedValue);
-        expr->derivedValue = (DataValue *)malloc(sizeof(DataValue));
-        int *customData = (int *)malloc(sizeof(int) * 3);
+        expr->derivedValue = (DataValue *)calloc(1, sizeof(DataValue));
+        int *customData = (int *)calloc(3, sizeof(int));
         if (customData) {
             customData[0] = ver[0];
             customData[1] = ver[1];
@@ -120,7 +120,7 @@ void install() {
     extensions = hashmap_new();
 
     /* Add extention to handle version*/
-    ContextExtension *ctxExt = (ContextExtension *)malloc(sizeof(ContextExtension));
+    ContextExtension *ctxExt = (ContextExtension *)calloc(1, sizeof(ContextExtension));
     ctxExt->toBool = semVerToBool;
     ctxExt->cmp = semVerComparator;
     ctxExt->customDataDealloc = semVerFreeDerived;

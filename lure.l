@@ -15,10 +15,9 @@ void yyerror(char *);
 "<="                        {yylval.intVal = TK_LE; return TK_LE;}
 "=="                        {yylval.intVal = TK_EQ; return TK_EQ;}
 "!="                        {yylval.intVal = TK_NE; return TK_NE;}
-"&&"                        {yylval.intVal = TK_AND; return TK_AND;}
-[aA][nN][dD]                {yylval.intVal = TK_AND; return TK_AND;}
-"||"                        {yylval.intVal = TK_OR; return TK_OR;}
-[oO][rR]                    {yylval.intVal = TK_OR; return TK_OR;}
+"&&"                        {yylval.intVal = TK_AND_LOGIC; return TK_AND_LOGIC;}
+[aA][nN][dD]                {yylval.intVal = TK_AND_KEYWORD; return TK_AND_KEYWORD;}
+"||"                        {yylval.intVal = TK_OR_LOGIC; return TK_OR_LOGIC;}
 [iI][nN]                    {yylval.intVal = TK_IN; return TK_IN;}
 (?i:not)                    {yylval.intVal = TK_NOT; return TK_NOT;}
 (?i:md5mod)                 {yylval.intVal = TK_MD5MOD; strcpy(&yylval.name[0], "md5mod"); return TK_MD5MOD;}
@@ -37,7 +36,6 @@ void yyerror(char *);
             }
 
 [-+]?[0-9]+\.[0-9]*([eE][0-9]+)?   {
-
                 yylval.doubleVal = atof(yytext);
                 return TK_DOUBLE_LITERAL;
             }
@@ -54,7 +52,7 @@ void yyerror(char *);
         }
     }
 
-[0-9a-zA-Z_\.]+ { strcpy(&yylval.name[0], yytext); return TK_STRING_LITERAL; }
+[0-9a-zA-Z_\.]+ { strcpy(&yylval.name[0], yytext); return TK_IDENTITY_LITERAL; }
 
 [-()<>=+*/;{}.,\[\]] {
                 return *yytext;
