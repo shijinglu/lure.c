@@ -88,14 +88,14 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 23 "lure.y"
+#line 26 "lure.y"
 {
     char name[MAX_IDENTIFIER_LENGTH+1]; /* identifier */
     int intVal;
     bool boolVal;
     double doubleVal;   /* value for token NUM*/
-    Expr *expr;
-    ExprList *exprList;
+    Node *expr;
+    NodeList *exprList;
 }
 /* Line 1529 of yacc.c.  */
 #line 102 "y.tab.h"

@@ -6,6 +6,7 @@
 #include "data.h"
 
 #define NODE_LIST_DEFAULT_CAPACITY 4
+#define MAX_IDENTIFIER_LENGTH 256
 
 typedef enum {
     BinOpType_EQ, 
@@ -47,11 +48,15 @@ typedef struct NodeList {
     
 } NodeList;
 
+/**
+ * Add element to the list.
+ * NOTE: this does not make copy of node or node->data.
+ */
 void node_list_add(NodeList *self, Node *node);
 bool node_list_is_resolvable(NodeList *self);
 bool node_list_in(NodeList *self, Data *data, map_t context);
 NodeList *node_list_new(void);
-void node_list_free(NodeList *list);
+void node_list_free(NodeList *list, bool deep);
 
 struct Node {
     NodeType     type;      /*Type annotation. */
@@ -66,6 +71,7 @@ struct Node {
 
 bool node_resolvable(Node *node);
 void free_node_deep(Node *node);
+Node *copy_node_deep(Node *node);
 
 /* Constructors */
 Node *NewNodeIdentity(const char *s);
@@ -75,6 +81,8 @@ Node *NewNodeIn(Node *left, NodeList *list);
 Node *NewNodeLike(Node *left, Node *right);
 Node *NewNodeLiteral(Data *data);
 
+/* helper methods to create literal nodes, will create new data object. */
+Node *NewBooleanLiteral(bool val);
 Node *NewIntLiteral(int val);
 Node *NewDoubleLiteral(double val);
 Node *NewStringLiteral(const char * val);

@@ -116,14 +116,17 @@
 /* Copy the first part of user declarations.  */
 #line 12 "lure.y"
 
-    #define YYDEBUG 1
+    #define YYDEBUG 0
 
     #include <stdio.h>
     #include <stdlib.h>
     #include <stdbool.h>
-    #include "lure.h"
+    /*TODO: merge three into one header. */
+    #include "node.h"
+    #include "util.h"
+    #include "ast_builder.h"
     extern int yylex(void);
-    void yyerror(ExprList **xpList, char *);
+    void yyerror(NodeList **xpList, char *);
 
 
 /* Enabling traces.  */
@@ -146,17 +149,17 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 23 "lure.y"
+#line 26 "lure.y"
 {
     char name[MAX_IDENTIFIER_LENGTH+1]; /* identifier */
     int intVal;
     bool boolVal;
     double doubleVal;   /* value for token NUM*/
-    Expr *expr;
-    ExprList *exprList;
+    Node *expr;
+    NodeList *exprList;
 }
 /* Line 193 of yacc.c.  */
-#line 160 "y.tab.c"
+#line 163 "y.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -169,7 +172,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 173 "y.tab.c"
+#line 176 "y.tab.c"
 
 #ifdef short
 # undef short
@@ -462,9 +465,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    56,    56,    57,    61,    62,    63,    64,    65,    66,
-      67,    68,    69,    70,    71,    75,    76,    77,    78,    79,
-      80,    84,    85,    86,    87,    91,    92
+       0,    59,    59,    60,    64,    65,    66,    67,    68,    69,
+      70,    71,    72,    73,    74,    78,    79,    80,    81,    82,
+      83,    87,    88,    89,    90,    94,    95
 };
 #endif
 
@@ -717,14 +720,14 @@ do {									  \
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, ExprList **rootExprList)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, NodeList **rootExprList)
 #else
 static void
 yy_symbol_value_print (yyoutput, yytype, yyvaluep, rootExprList)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
-    ExprList **rootExprList;
+    NodeList **rootExprList;
 #endif
 {
   if (!yyvaluep)
@@ -751,14 +754,14 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep, rootExprList)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, ExprList **rootExprList)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, NodeList **rootExprList)
 #else
 static void
 yy_symbol_print (yyoutput, yytype, yyvaluep, rootExprList)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
-    ExprList **rootExprList;
+    NodeList **rootExprList;
 #endif
 {
   if (yytype < YYNTOKENS)
@@ -806,13 +809,13 @@ do {								\
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule, ExprList **rootExprList)
+yy_reduce_print (YYSTYPE *yyvsp, int yyrule, NodeList **rootExprList)
 #else
 static void
 yy_reduce_print (yyvsp, yyrule, rootExprList)
     YYSTYPE *yyvsp;
     int yyrule;
-    ExprList **rootExprList;
+    NodeList **rootExprList;
 #endif
 {
   int yynrhs = yyr2[yyrule];
@@ -1085,14 +1088,14 @@ yysyntax_error (char *yyresult, int yystate, int yychar)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, ExprList **rootExprList)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, NodeList **rootExprList)
 #else
 static void
 yydestruct (yymsg, yytype, yyvaluep, rootExprList)
     const char *yymsg;
     int yytype;
     YYSTYPE *yyvaluep;
-    ExprList **rootExprList;
+    NodeList **rootExprList;
 #endif
 {
   YYUSE (yyvaluep);
@@ -1121,7 +1124,7 @@ int yyparse ();
 #endif
 #else /* ! YYPARSE_PARAM */
 #if defined __STDC__ || defined __cplusplus
-int yyparse (ExprList **rootExprList);
+int yyparse (NodeList **rootExprList);
 #else
 int yyparse ();
 #endif
@@ -1158,11 +1161,11 @@ yyparse (YYPARSE_PARAM)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 int
-yyparse (ExprList **rootExprList)
+yyparse (NodeList **rootExprList)
 #else
 int
 yyparse (rootExprList)
-    ExprList **rootExprList;
+    NodeList **rootExprList;
 #endif
 #endif
 {
@@ -1411,93 +1414,93 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 56 "lure.y"
+#line 59 "lure.y"
     { (yyval.exprList) = exprListOfExpr((yyvsp[(1) - (1)].expr)); *rootExprList = (yyval.exprList); }
     break;
 
   case 3:
-#line 57 "lure.y"
+#line 60 "lure.y"
     { (yyval.exprList) = exprListAppend((yyvsp[(1) - (3)].exprList), (yyvsp[(3) - (3)].expr)); }
     break;
 
   case 4:
-#line 61 "lure.y"
+#line 64 "lure.y"
     { (yyval.expr) = (yyvsp[(1) - (1)].expr); }
     break;
 
   case 5:
-#line 62 "lure.y"
+#line 65 "lure.y"
     { (yyval.expr) = exprBinOp((yyvsp[(1) - (3)].expr), (yyvsp[(2) - (3)].intVal), (yyvsp[(3) - (3)].expr)); }
     break;
 
   case 6:
-#line 63 "lure.y"
+#line 66 "lure.y"
     { (yyval.expr) = exprIn((yyvsp[(1) - (5)].expr), TK_IN, (yyvsp[(4) - (5)].exprList)); }
     break;
 
   case 7:
-#line 64 "lure.y"
+#line 67 "lure.y"
     { (yyval.expr) = exprIn((yyvsp[(1) - (6)].expr), TK_NOTIN, (yyvsp[(5) - (6)].exprList)); }
     break;
 
   case 8:
-#line 65 "lure.y"
+#line 68 "lure.y"
     { (yyval.expr) = exprFunction0((yyvsp[(1) - (3)].name)); }
     break;
 
   case 9:
-#line 66 "lure.y"
+#line 69 "lure.y"
     { (yyval.expr) = exprFunction((yyvsp[(1) - (4)].name), (yyvsp[(3) - (4)].exprList)); }
     break;
 
   case 10:
-#line 67 "lure.y"
+#line 70 "lure.y"
     { (yyval.expr) = exprBetween((yyvsp[(1) - (5)].expr), (yyvsp[(3) - (5)].expr), (yyvsp[(5) - (5)].expr)); }
     break;
 
   case 11:
-#line 68 "lure.y"
+#line 71 "lure.y"
     { (yyval.expr) = exprBinOp((yyvsp[(1) - (3)].expr), (yyvsp[(2) - (3)].intVal), (yyvsp[(3) - (3)].expr)); }
     break;
 
   case 12:
-#line 69 "lure.y"
+#line 72 "lure.y"
     { (yyval.expr) = exprBinOp((yyvsp[(1) - (3)].expr), (yyvsp[(2) - (3)].intVal), (yyvsp[(3) - (3)].expr)); }
     break;
 
   case 13:
-#line 70 "lure.y"
+#line 73 "lure.y"
     { (yyval.expr) = exprUnaryOp((yyvsp[(1) - (2)].intVal), (yyvsp[(2) - (2)].expr)); }
     break;
 
   case 14:
-#line 71 "lure.y"
+#line 74 "lure.y"
     { (yyval.expr) = (yyvsp[(2) - (3)].expr); }
     break;
 
   case 21:
-#line 84 "lure.y"
+#line 87 "lure.y"
     { (yyval.expr) = exprOfInt((yyvsp[(1) - (1)].intVal)); }
     break;
 
   case 22:
-#line 85 "lure.y"
+#line 88 "lure.y"
     { (yyval.expr) = exprOfDouble((yyvsp[(1) - (1)].doubleVal)); }
     break;
 
   case 23:
-#line 86 "lure.y"
+#line 89 "lure.y"
     { (yyval.expr) = exprOfString((yyvsp[(1) - (1)].name)); }
     break;
 
   case 24:
-#line 87 "lure.y"
+#line 90 "lure.y"
     { (yyval.expr) = exprOfIdentity((yyvsp[(1) - (1)].name)); }
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1501 "y.tab.c"
+#line 1504 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1711,11 +1714,11 @@ yyreturn:
 }
 
 
-#line 95 "lure.y"
+#line 98 "lure.y"
 
 
 
-void yyerror(ExprList **xpList, char *s) {
+void yyerror(NodeList **xpList, char *s) {
     fprintf(stderr, "%s\n", s);
 }
 

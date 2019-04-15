@@ -32,6 +32,10 @@ Node *NewNodeLiteral(Data *data) {
     return new_node_literal_nocopy(data->copy(data));
 }
 
+Node *NewBooleanLiteral(bool val) {
+    return new_node_literal_nocopy(NewBoolData(val));
+}
+
 Node *NewIntLiteral(int val) {
     return new_node_literal_nocopy(NewIntData(val));
 }

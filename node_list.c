@@ -89,9 +89,11 @@ NodeList *node_list_new() {
     return list;
 }
 
-void node_list_free(NodeList *list) {
-    for (int i=0; i<list->n_all; ++i) {
-        free_node_deep(list->all[i]);
+void node_list_free(NodeList *list, bool deep) {
+    if (deep) {
+        for (int i=0; i<list->n_all; ++i) {
+            free_node_deep(list->all[i]);
+        }
     }
     free(list->all); list->all = NULL;
     free(list->unresolved); list->unresolved = NULL;

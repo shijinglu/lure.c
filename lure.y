@@ -10,14 +10,17 @@
  *  P_VALUE < 0.05
  */
 %{
-    #define YYDEBUG 1
+    #define YYDEBUG 0
 
     #include <stdio.h>
     #include <stdlib.h>
     #include <stdbool.h>
-    #include "lure.h"
+    /*TODO: merge three into one header. */
+    #include "node.h"
+    #include "util.h"
+    #include "ast_builder.h"
     extern int yylex(void);
-    void yyerror(ExprList **xpList, char *);
+    void yyerror(NodeList **xpList, char *);
 %}
 
 %union {
@@ -25,11 +28,11 @@
     int intVal;
     bool boolVal;
     double doubleVal;   /* value for token NUM*/
-    Expr *expr;
-    ExprList *exprList;
+    Node *expr;
+    NodeList *exprList;
 };
 
-%parse-param {ExprList **rootExprList}
+%parse-param {NodeList **rootExprList}
 
 %left TK_AND_LOGIC
 %left TK_OR_LOGIC
@@ -95,6 +98,6 @@ function_name
 %%
 
 
-void yyerror(ExprList **xpList, char *s) {
+void yyerror(NodeList **xpList, char *s) {
     fprintf(stderr, "%s\n", s);
 }

@@ -30,7 +30,11 @@ bool StringDataToBool(Data *self) {
     if (str_equal_ignore_case(self->raw.stringVal, "false")) {
         return false;
     }
-    return self->raw.stringVal != NULL;
+    
+    if ((self->raw.stringVal == NULL) || strlen(self->raw.stringVal) == 0) {
+        return false;
+    }
+    return true;
 }
 
 int StringDataToInt(Data *self) {

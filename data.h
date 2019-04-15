@@ -2,6 +2,15 @@
 #define __LURE_DATA_H__
 #include <stdbool.h> 
 
+// #define LURE_LOG(msg, args...) printf("[LURE LOG]: %s(%s:%d) %s \n",
+// __func__,__FILE__, __LINE__, msg, ##args)
+#define LURE_LOG(msg, args...) \
+do {                       \
+} while (0)
+
+#define LURE_ERROR(msg, args...) \
+printf("[LURE ERROR]: %s(%s:%d) %s \n", __func__,__FILE__, __LINE__, msg, ##args); \
+exit(-1);
 
 typedef struct Data Data;
 
@@ -23,6 +32,7 @@ typedef union RawData {
 
 /**
  * Data is the result object returned from each Node.evaluate(...)
+ * Value of Data should be immutable.
  */
 struct Data {
     /* holds actual data. */

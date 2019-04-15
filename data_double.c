@@ -17,9 +17,9 @@ int DoubleDataCompareTo(Data *self, Data *rhs) {
     assert(rhs != NULL);
     double left = self->toDouble(self);
     double right = rhs->toDouble(rhs);
-    if (right < left) {
+    if (left < right) {
         return -1;
-    } else if (right > left) {
+    } else if (left > right) {
         return 1;
     } else {
         return 0;

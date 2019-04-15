@@ -2,8 +2,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <limits.h>
-#include "lure.h"
+/* TODO: merge three into one header. */
+#include "node.h"
+#include "util.h"
 #include "y.tab.h"
+
 void yyerror(char *);
 %}
 
@@ -40,7 +43,7 @@ void yyerror(char *);
                 return TK_DOUBLE_LITERAL;
             }
 
-['"][^'"\n]*['"] {
+[`'"][^`'"\n]*[`'"] {
         if (yytext[yyleng-1] != yytext[0] || yyleng > MAX_IDENTIFIER_LENGTH) {
             printf("yytext = %s, len=%zu, yytext[yyleng-2]=%c", yytext, yyleng, yytext[yyleng-2]);
             yyerror("improperly terminated string");
