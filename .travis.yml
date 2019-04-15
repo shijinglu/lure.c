@@ -1,0 +1,48 @@
+language: c
+
+os:
+  - linux
+  - osx
+
+compiler:
+  - clang
+  - gcc
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env:
+         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+    - os: osx
+      osx_image: xcode8
+    - os: osx
+      osx_image: xcode10.1
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+# before_script: 
+# - cd ${TRAVIS_BUILD_DIR}
+# - lcov --directory . --zerocounters
+
+# Build steps
+script: 
+  - cd ${TRAVIS_BUILD_DIR}
+  - make clean
+  - make test
