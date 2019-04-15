@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
-#include <strings.h>
+#include <string.h>
 #include <ctype.h>
 #include "data.h"
 #include "util.h"

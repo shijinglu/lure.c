@@ -12,7 +12,7 @@ Data *FunctionMD5ModDerive(Data **params, int nparams) {
     char *msg = params[0]->getCStr(params[0]);
     int   amp = params[1]->toInt(params[1]);
     size_t msg_len = strlen(msg);
-    uint64_t md5 = md5str(params[0]->getCStr(params[0]), msg_len);
+    u64 md5 = md5str(params[0]->getCStr(params[0]), msg_len);
     return NewIntData(md5 % amp);
 }
 

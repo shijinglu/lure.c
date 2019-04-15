@@ -7,27 +7,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "md5hash.h"
 
 // leftrotate function definition
 #define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
 
-uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
+u64 md5(u8 *initial_msg, size_t initial_len) {
 
     // These vars will contain the hash
-    uint32_t h0, h1, h2, h3;
+    u32 h0, h1, h2, h3;
 
     // Message (to prepare)
-    uint8_t *msg = NULL;
+    u8 *msg = NULL;
 
     // Note: All variables are unsigned 32 bit and wrap modulo 2^32 when calculating
     // r specifies the per-round shift amounts
-    uint32_t r[] = {7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+    u32 r[] = {7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
                     5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,
                     4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
                     6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 
     // Use binary integer part of the sines of integers (in radians) as constants// Initialize variables:
-    uint32_t k[] = {
+    u32 k[] = {
         0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
         0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
         0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
@@ -68,7 +69,7 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
     memcpy(msg, initial_msg, initial_len);
     msg[initial_len] = 128; // write the "1" bit
 
-    uint32_t bits_len = 8*initial_len; // note, we append the len
+    u32 bits_len = 8*initial_len; // note, we append the len
     memcpy(msg + new_len, &bits_len, 4);           // in bits at the end of the buffer
 
     // Process the message in successive 512-bit chunks:
@@ -77,45 +78,45 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
     for(offset=0; offset<new_len; offset += (512/8)) {
 
         // break chunk into sixteen 32-bit words w[j], 0 ≤ j ≤ 15
-        uint32_t *w = (uint32_t *) (msg + offset);
+        u32 *w = (u32 *) (msg + offset);
 
 #ifdef DEBUG
         printf("offset: %d %x\n", offset, offset);
 
         int j;
-        for(j =0; j < 64; j++) printf("%x ", ((uint8_t *) w)[j]);
+        for(j =0; j < 64; j++) printf("%x ", ((u8 *) w)[j]);
         puts("");
 #endif
 
         // Initialize hash value for this chunk:
-        uint32_t a = h0;
-        uint32_t b = h1;
-        uint32_t c = h2;
-        uint32_t d = h3;
+        u32 a = h0;
+        u32 b = h1;
+        u32 c = h2;
+        u32 d = h3;
 
         // Main loop:
-        uint32_t i;
+        u32 i;
         for(i = 0; i<64; i++) {
 
 #ifdef ROUNDS
-            uint8_t *p;
+            u8 *p;
             printf("%i: ", i);
-            p=(uint8_t *)&a;
+            p=(u8 *)&a;
             printf("%2.2x%2.2x%2.2x%2.2x ", p[0], p[1], p[2], p[3], a);
 
-            p=(uint8_t *)&b;
+            p=(u8 *)&b;
             printf("%2.2x%2.2x%2.2x%2.2x ", p[0], p[1], p[2], p[3], b);
 
-            p=(uint8_t *)&c;
+            p=(u8 *)&c;
             printf("%2.2x%2.2x%2.2x%2.2x ", p[0], p[1], p[2], p[3], c);
 
-            p=(uint8_t *)&d;
+            p=(u8 *)&d;
             printf("%2.2x%2.2x%2.2x%2.2x", p[0], p[1], p[2], p[3], d);
             puts("");
 #endif
 
 
-            uint32_t f, g;
+            u32 f, g;
 
              if (i < 16) {
                 f = (b & c) | ((~b) & d);
@@ -134,7 +135,7 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
 #ifdef ROUNDS
             printf("f=%x g=%d w[g]=%x\n", f, g, w[g]);
 #endif
-            uint32_t temp = d;
+            u32 temp = d;
             d = c;
             c = b;
 #ifdef DEBUG
@@ -161,14 +162,14 @@ uint64_t md5(uint8_t *initial_msg, size_t initial_len) {
     return h0 + h1 + h2 + h3;
 }
 
-uint64_t md5str(char *initial_msg, size_t initial_len) {
-    /*uint8_t *unsigned_msg = (uint8_t *)calloc(initial_len, sizeof(char));
+u64 md5str(char *initial_msg, size_t initial_len) {
+    /*u8 *unsigned_msg = (u8 *)calloc(initial_len, sizeof(char));
     for(size_t i = 0; i < initial_len; i++) {
-        unsigned_msg[i] = (uint8_t)(initial_msg[i]);
+        unsigned_msg[i] = (u8)(initial_msg[i]);
     }
-    uint64_t ret =  md5((uint8_t *)unsigned_msg, initial_len); 
+    u64 ret =  md5((u8 *)unsigned_msg, initial_len); 
     free(unsigned_msg); unsigned_msg = NULL;
     return ret;
     */
-    return md5((uint8_t *)initial_msg, initial_len);
+    return md5((u8 *)initial_msg, initial_len);
 }

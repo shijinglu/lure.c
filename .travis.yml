@@ -33,8 +33,13 @@ matrix:
       osx_image: xcode8
     - os: osx
       osx_image: xcode10.1
+  exclude:
+    - os: linux
+      compiler: clang
+    - os: osx
+      compiler: gcc
 
-before_install:
+  before_install:
     - eval "${MATRIX_EVAL}"
 
 # before_script: 

@@ -1,7 +1,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include <strings.h>
+#include <string.h>
 #include "data.h"
 #include "util.h"
 
