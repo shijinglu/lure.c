@@ -9,7 +9,7 @@
 
 /* evaluate, allocate and return a data struct. */
 Data *node_literal_evaluate(Node *node, map_t context) {
-    assert(node != NULL);
+    LURE_ASSERT(node != NULL, "cannot evaluate against an empty node");
     if (node->data == NULL) {
         return NewBoolData(false);
     }

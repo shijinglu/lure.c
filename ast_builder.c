@@ -6,7 +6,6 @@
 #include "y.tab.h"
 
 NodeList *exprListOfExpr(Node *node) {
-    LURE_LOG("exprListOfExpr");
     NodeList *list = node_list_new();
     node_list_add(list, node);
     return list;
@@ -22,7 +21,7 @@ Node *exprUnaryOp(int uop, Node *node) {
     if (uop == TK_NOT) {
         return NewNodeBinOp(BinOpType_EQ, node, NewBooleanLiteral(false));
     }
-    LURE_ERROR("Unsupported unary operator");
+    LURE_ERROR("Unsupported unary operator: <%d>", uop);
     return NULL;
 }
 
@@ -45,7 +44,7 @@ BinOpType map_token_to_binop(int bop) {
         case TK_OR_LOGIC:
             return BinOpType_OR;
         default:
-            LURE_ERROR("Unsupported binary operator");
+            LURE_ERROR("Unsupported binary operator: <%d>", bop);
             break;
     }
     return BinOpType_EQ;
@@ -80,7 +79,7 @@ Node *exprIn(Node *xpLeft, int opInOrNot, NodeList *xpList) {
     } else if (opInOrNot == TK_NOTIN) {
         return exprUnaryOp(TK_NOT, node);
     }
-     LURE_ERROR("Unexpected operator in an 'in' expression. ");
+     LURE_ERROR("Unexpected operator <%d> in an 'in' expression. ", opInOrNot);
     return NULL;
 }
 

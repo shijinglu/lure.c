@@ -50,7 +50,7 @@ int VersionDataCompareTo(Data *self, Data *rhs) {
         rhsVer = (sem_ver_t *)calloc(1, sizeof(sem_ver_t));
         bool ok = parse_version(rhs->getCStr(rhs), rhsVer);
         if (!ok) {
-            LURE_ERROR("Unable to parse version \n");
+            LURE_ERROR("Unable to parse version: <%s>", rhs->getCStr(rhs));
         }
         cmp = version_cmp(lhsVer, rhsVer);
         free(rhsVer);

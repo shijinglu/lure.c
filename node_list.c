@@ -6,8 +6,8 @@
 #include "hashmap.h"
 
 void node_list_add(NodeList *self, Node *node) {
-    assert(self != NULL);
-    assert(node != NULL);
+    LURE_ASSERT(self != NULL, "cannot add to a NULL list");
+    LURE_ASSERT(node != NULL, "object to be added must not be NULL");
     if (self->n_all + 2 >= self->capacity) {
         int capacity = self->capacity * 2;
         self->all = (Node**)realloc(self->all, sizeof(Node*) * capacity);
@@ -27,6 +27,7 @@ void node_list_add(NodeList *self, Node *node) {
 }
 
 bool node_list_is_resolvable(NodeList *self) {
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->resolvable;
 }
 

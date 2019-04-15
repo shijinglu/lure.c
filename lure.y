@@ -24,7 +24,7 @@
 %}
 
 %union {
-    char name[MAX_IDENTIFIER_LENGTH+1]; /* identifier */
+    char *name; /* identifier */
     int intVal;
     bool boolVal;
     double doubleVal;   /* value for token NUM*/

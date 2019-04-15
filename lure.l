@@ -1,6 +1,7 @@
 %{
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 #include <limits.h>
 /* TODO: merge three into one header. */
 #include "node.h"
@@ -23,7 +24,7 @@ void yyerror(char *);
 "||"                        {yylval.intVal = TK_OR_LOGIC; return TK_OR_LOGIC;}
 [iI][nN]                    {yylval.intVal = TK_IN; return TK_IN;}
 (?i:not)                    {yylval.intVal = TK_NOT; return TK_NOT;}
-(?i:md5mod)                 {yylval.intVal = TK_MD5MOD; strcpy(&yylval.name[0], "md5mod"); return TK_MD5MOD;}
+(?i:md5mod)                 {yylval.intVal = TK_MD5MOD; yylval.name = strdup("md5mod"); /* yylval.name = "md5mod";  strcpy(&yylval.name[0], "md5mod");*/ return TK_MD5MOD;}
 [sS][tT][rR][cC][mM][pP]    {yylval.intVal = TK_STRCMP; return TK_STRCMP;}
 (?i:between)                {yylval.intVal = TK_BETWEEN; return TK_BETWEEN;}
 
@@ -44,18 +45,16 @@ void yyerror(char *);
             }
 
 [`'"][^`'"\n]*[`'"] {
-        if (yytext[yyleng-1] != yytext[0] || yyleng > MAX_IDENTIFIER_LENGTH) {
+        if (yytext[yyleng-1] != yytext[0]) {
             printf("yytext = %s, len=%zu, yytext[yyleng-2]=%c", yytext, yyleng, yytext[yyleng-2]);
             yyerror("improperly terminated string");
         } else {
-            if (yyleng == 2) yylval.name[0]='\0';
-            else strncpy(&yylval.name[0], &yytext[1], yyleng-2);
-            yylval.name[yyleng-2] = '\0';
+            yylval.name = strndup(&yytext[1], yyleng-2);
             return TK_STRING_LITERAL;
         }
     }
 
-[0-9a-zA-Z_\.]+ { strcpy(&yylval.name[0], yytext); return TK_IDENTITY_LITERAL; }
+[0-9a-zA-Z_\.]+ {  yylval.name = strndup(yytext, yyleng); /*strcpy(&yylval.name[0], yytext)*/; return TK_IDENTITY_LITERAL; }
 
 [-()<>=+*/;{}.,\[\]] {
                 return *yytext;

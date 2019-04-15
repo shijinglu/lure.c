@@ -7,9 +7,9 @@
 
 /* evaluate, allocate and return a data struct. */
 Data *node_binop_evaluate(Node *node, map_t context) {
-    assert(node != NULL);
-    assert(node->left != NULL);
-    assert(node->right != NULL);
+    LURE_ASSERT(node != NULL, "cannot evaluate against NULL node");
+    LURE_ASSERT(node->left != NULL, "left side of a binary operation must not be empty");
+    LURE_ASSERT(node->right != NULL, "right side of a binary operation must not be empty");
     Data *leftRet = node->left->evaluate(node->left, context);
     Data *rightRet = node->right->evaluate(node->right, context);
     bool flag = false;
@@ -50,6 +50,8 @@ eval_return:
 }
 
 Node *NewNodeBinOp(BinOpType op, Node *left, Node *right) {
+    LURE_ASSERT(left != NULL, "left side of a binary operation must not be empty");
+    LURE_ASSERT(right != NULL, "right side of a binary operation must not be empty");
     Node *node = (Node *)calloc(1, sizeof(Node));
     node->op = op;
     node->type = NodeType_BinOp;

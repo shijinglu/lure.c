@@ -5,10 +5,10 @@
 #include "md5hash.h"
 
 Data *FunctionMD5ModDerive(Data **params, int nparams) {
-    assert(nparams == 2);
-    assert(params != NULL);
-    assert(params[0] != NULL);
-    assert(params[1] != NULL);
+    LURE_ASSERT(nparams == 2, "md5mod accepts 2 parameters, %d are given", nparams);
+    LURE_ASSERT(params != NULL, "parameters must not be empty");
+    LURE_ASSERT(params[0] != NULL, "first parameter must not be NULL");
+    LURE_ASSERT(params[1] != NULL, "second parameter must not be NULL");
     char *msg = params[0]->getCStr(params[0]);
     int   amp = params[1]->toInt(params[1]);
     size_t msg_len = strlen(msg);

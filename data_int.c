@@ -12,8 +12,8 @@ void CleanIntData(Data *self) {
 }
 
 int IntDataCompareTo(Data *self, Data *rhs) {
-    assert(self != NULL);
-    assert(rhs != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
+    LURE_ASSERT(rhs != NULL, "right hand side must not be NULL");
     if (rhs->rawType == RawDataDouble) {
         double left = self->toDouble(self);
         double right = rhs->toDouble(rhs);
@@ -29,22 +29,22 @@ int IntDataCompareTo(Data *self, Data *rhs) {
 }
 
 bool IntDataToBool(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return (bool)self->raw.intVal;
 }
 
 int IntDataToInt(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->raw.intVal;
 }
 
 double IntDataToDouble(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return (double)self->raw.intVal;
 }
 
 char *IntDataToString(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     char * num = (char *)calloc(64, sizeof(char));
     snprintf(num, 63, "%d", self->raw.intVal);
     num[63] = '\0';
@@ -52,10 +52,12 @@ char *IntDataToString(Data *self) {
 }
 
 char *IntDataGetCStr(Data *self) {
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->intKey;
 }
 
 Data *IntDataCopy(Data *self) {
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return NewIntData(self->toInt(self));
 }
 

@@ -7,13 +7,14 @@
 
 /* Release objects created in `NewStringData`*/
 void CleanStringData(Data *self) {
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     free(self->raw.stringVal);
     self->raw.stringVal = NULL;
 }
 
 int StringDataCompareTo(Data *self, Data *rhs) {
-    assert(self != NULL);
-    assert(rhs != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
+    LURE_ASSERT(rhs != NULL, "right hand side must not be NULL");
     char *left = self->toString(self);
     char *right = rhs->toString(rhs);
     int cmp = strcmp(left, right);
@@ -25,8 +26,7 @@ int StringDataCompareTo(Data *self, Data *rhs) {
 /* (boo)aString is false only if aString is literally "false"
  * (case insensitive) or it is empty. */
 bool StringDataToBool(Data *self) {
-    assert(self != NULL);
-
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     if (str_equal_ignore_case(self->raw.stringVal, "false")) {
         return false;
     }
@@ -38,26 +38,27 @@ bool StringDataToBool(Data *self) {
 }
 
 int StringDataToInt(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return atoi(self->getCStr(self));
 }
 
 double StringDataToDouble(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return (double)self->raw.intVal;
 }
 
 char *StringDataToString(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return str_concat(1, self->raw.stringVal);
 }
 
 char *StringDataGetCStr(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->raw.stringVal;
 }
 
 Data *StringDataCopy(Data *self) {
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return NewStringData(self->raw.stringVal);
 }
 

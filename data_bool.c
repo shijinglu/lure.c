@@ -1,49 +1,50 @@
 
 #include <stdlib.h>
-#include <assert.h>
 #include <strings.h>
 #include "data.h"
 #include "util.h"
+#include "logger.h"
 
 /* Release objects created in `NewBoolData`*/
 void CleanBoolData(Data *self) {
     /* dealloc singleton is not allowed. */
-    assert(self != GetBoolDataTrue() && self != GetBoolDataFalse());
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     free(self->intKey); self->intKey = NULL;
 }
 
 int BoolDataCompareTo(Data *self, Data *rhs) {
-    assert(self != NULL);
-    assert(rhs != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
+    LURE_ASSERT(rhs != NULL, "right hand side must not be NULL");
     return self->toInt(self) - rhs->toInt(rhs);
 }
 
 bool BoolDataToBool(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return (bool)self->raw.boolVal;
 }
 
 int BoolDataToInt(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->raw.boolVal ? 1 : 0;
 }
 
 double BoolDataToDouble(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->raw.boolVal ? 1.0 : 0.0;
 }
 
 char *BoolDataToString(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->raw.boolVal ? str_concat(1, "true") : str_concat(1, "false");
 }
 
 char *BoolDataGetCstr(Data *self) {
-    assert(self != NULL);
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return self->raw.boolVal ? "true" : "false";
 }
 
 Data *BoolDataCopy(Data *self) {
+    LURE_ASSERT(self != NULL, "self must not be NULL");
     return NewBoolData(self->raw.boolVal);
 }
 

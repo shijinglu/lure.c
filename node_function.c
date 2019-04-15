@@ -9,9 +9,9 @@
 
 /* evaluate, allocate and return a data struct. */
 Data *node_function_evaluate(Node *node, map_t context) {
-    assert(node != NULL);
-    assert(node->left != NULL);
-    assert(node->list != NULL);
+    LURE_ASSERT(node != NULL, "cannot evaluate against an empty node");
+    LURE_ASSERT(node->left != NULL, "function name must not be NULL");
+    LURE_ASSERT(node->list != NULL, "function parameter list must not be NULL");
     int n_params = node->list->n_all;
     Data **params = (Data **)calloc(n_params, sizeof(Data *));
     for(size_t i = 0; i < n_params; i++) {

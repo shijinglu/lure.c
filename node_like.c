@@ -9,9 +9,9 @@
 
 /* evaluate, allocate and return a data struct. */
 Data *node_like_evaluate(Node *node, map_t context) {
-    assert(node != NULL);
-    assert(node->left != NULL);
-    assert(node->right != NULL);
+    LURE_ASSERT(node != NULL, "cannot evaluate against an empty node");
+    LURE_ASSERT(node->left != NULL, "left side of a <like> node must not be NULL");
+    LURE_ASSERT(node->right != NULL, "right side of a <like> node must not be NULL");
 
     Data *leftRes = node->left->evaluate(node->left, context);
     Data *rightRes = node->right->evaluate(node->right, context);

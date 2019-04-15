@@ -51,12 +51,12 @@ test_node: data.h data_bool.c data_double.c data_int.c data_string.c data_versio
 	./test_node.out
 
 test_lure: ast_builder.c ast_builder.h data.h data_bool.c data_double.c data_int.c data_string.c data_version.c \
-	function.c function.h function_md5mod.c hashmap.c hashmap.h lex.yy.c lure_ext.c lure_ext.h md5hash.c md5hash.h \
+	function.c function.h function_md5mod.c hashmap.c hashmap.h lex.yy.c lure.c lure.h md5hash.c md5hash.h \
 	node.c node.h node_binop.c node_function.c node_identity.c node_in.c node_like.c node_list.c node_literal.c \
 	re.c re.h  util.c util.h y.tab.c y.tab.h test_lure.c
 
 	$(CC) $(CFLAGS) ast_builder.c data_bool.c data_double.c data_int.c data_string.c data_version.c \
-	function.c function_md5mod.c hashmap.c lex.yy.c lure_ext.c md5hash.c util.c y.tab.c \
+	function.c function_md5mod.c hashmap.c lex.yy.c lure.c md5hash.c util.c y.tab.c \
 	node.c node_binop.c node_function.c node_identity.c node_in.c node_like.c node_list.c node_literal.c re.c \
 	test_lure.c -o test_lure.out
 

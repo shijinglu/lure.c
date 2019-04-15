@@ -8,9 +8,9 @@
 
 /* evaluate, allocate and return a data struct. */
 Data *node_in_evaluate(Node *node, map_t context) {
-    assert(node != NULL);
-    assert(node->left != NULL);
-    assert(node->list != NULL);
+    LURE_ASSERT(node != NULL, "cannot evaluate against an empty node");
+    LURE_ASSERT(node->left != NULL, "left side of an <in> operation must not be NULL");
+    LURE_ASSERT(node->list != NULL, "list of an <in> node must not be NULL");
     if (node->list->n_all == 0) {
         return NewBoolData(false);
     }

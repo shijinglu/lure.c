@@ -9,7 +9,7 @@
 /* Look up context and return resolved data if found. Otherwise, return
  copy of internal data. */
 Data *node_identity_evaluate(Node *node, map_t context) {
-    assert(node != NULL);
+    LURE_ASSERT(node != NULL, "cannot evaluate against an empty node");
     if (node->data == NULL) {
         return NewBoolData(false);
     }

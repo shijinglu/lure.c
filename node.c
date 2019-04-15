@@ -8,7 +8,7 @@
  * or function eval.
  */
 bool node_resolvable(Node *node) {
-    assert(node != NULL);
+    LURE_ASSERT(node != NULL, "self must not be NULL");
     switch (node->type) {
         case NodeType_BinOp:
         case NodeType_UnaryOp:
@@ -23,7 +23,9 @@ bool node_resolvable(Node *node) {
 
 /* Recursively free all nodes and data contained. */
 void free_node_deep(Node *node) {
-    assert(node != NULL);
+    if (node == NULL) {
+        return;
+    }
     if (node->left != NULL) {
         free_node_deep(node->left);
         node->left = NULL;
@@ -45,7 +47,7 @@ void free_node_deep(Node *node) {
 }
 
 Node *copy_node_deep(Node *node) {
-    assert(node!=NULL);
+    LURE_ASSERT(node!=NULL, "cannot copy from NULL");
     Node *dest = (Node *)calloc(1, sizeof(Node));
     memcpy(dest, node, sizeof(Node));
     if (node->left != NULL) {
