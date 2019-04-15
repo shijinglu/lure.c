@@ -46,9 +46,8 @@
 %token <intVal> TK_AND_KEYWORD TK_AND_LOGIC TK_OR_LOGIC TK_IN TK_NOT TK_NOTIN
 %token <intVal> TK_INT_LITERAL
 %token <doubleVal> TK_DOUBLE_LITERAL
-%token <name> TK_STRING_LITERAL TK_MD5MOD TK_STRCMP TK_IDENTITY_LITERAL
+%token <name> TK_STRING_LITERAL TK_IDENTITY_LITERAL
 
-%type <name> function_name
 %type <expr> expr literal_value
 %type <exprList> expr_list
 %type <intVal> cmp_op
@@ -65,8 +64,8 @@ expr
  | expr cmp_op expr %prec BINOPX                               { $$ = exprBinOp($1, $2, $3); }
  | expr TK_IN '(' expr_list ')'                                { $$ = exprIn($1, TK_IN, $4); }
  | expr TK_NOT TK_IN '(' expr_list ')'                         { $$ = exprIn($1, TK_NOTIN, $5); }
- | function_name '(' ')'                                       { $$ = exprFunction0($1); }
- | function_name '(' expr_list ')'                             { $$ = exprFunction($1, $3); }
+ | TK_IDENTITY_LITERAL '(' ')'                                 { $$ = exprFunction0($1); free($1); }
+ | TK_IDENTITY_LITERAL '(' expr_list ')'                       { $$ = exprFunction($1, $3); free($1); }
  | expr TK_BETWEEN expr TK_AND_KEYWORD expr %prec BINOPX       { $$ = exprBetween($1, $3, $5); }
  | expr TK_AND_LOGIC expr                                      { $$ = exprBinOp($1, $2, $3); }
  | expr TK_OR_LOGIC expr                                       { $$ = exprBinOp($1, $2, $3); }
@@ -86,13 +85,8 @@ cmp_op
 literal_value
  : TK_INT_LITERAL           { $$ = exprOfInt($1); }
  | TK_DOUBLE_LITERAL        { $$ = exprOfDouble($1); }
- | TK_STRING_LITERAL        { $$ = exprOfString($1); }
- | TK_IDENTITY_LITERAL      { $$ = exprOfIdentity($1); }
- ;
-
-function_name
- : TK_MD5MOD
- | TK_STRCMP
+ | TK_STRING_LITERAL        { $$ = exprOfString($1); free($1); }
+ | TK_IDENTITY_LITERAL      { $$ = exprOfIdentity($1); free($1); }
  ;
 
 %%

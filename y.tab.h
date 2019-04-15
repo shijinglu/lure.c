@@ -56,9 +56,7 @@
      TK_INT_LITERAL = 272,
      TK_DOUBLE_LITERAL = 273,
      TK_STRING_LITERAL = 274,
-     TK_MD5MOD = 275,
-     TK_STRCMP = 276,
-     TK_IDENTITY_LITERAL = 277
+     TK_IDENTITY_LITERAL = 275
    };
 #endif
 /* Tokens.  */
@@ -79,9 +77,7 @@
 #define TK_INT_LITERAL 272
 #define TK_DOUBLE_LITERAL 273
 #define TK_STRING_LITERAL 274
-#define TK_MD5MOD 275
-#define TK_STRCMP 276
-#define TK_IDENTITY_LITERAL 277
+#define TK_IDENTITY_LITERAL 275
 
 
 
@@ -98,7 +94,7 @@ typedef union YYSTYPE
     NodeList *exprList;
 }
 /* Line 1529 of yacc.c.  */
-#line 102 "y.tab.h"
+#line 98 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

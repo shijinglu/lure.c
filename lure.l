@@ -24,8 +24,6 @@ void yyerror(char *);
 "||"                        {yylval.intVal = TK_OR_LOGIC; return TK_OR_LOGIC;}
 [iI][nN]                    {yylval.intVal = TK_IN; return TK_IN;}
 (?i:not)                    {yylval.intVal = TK_NOT; return TK_NOT;}
-(?i:md5mod)                 {yylval.intVal = TK_MD5MOD; yylval.name = strdup("md5mod"); /* yylval.name = "md5mod";  strcpy(&yylval.name[0], "md5mod");*/ return TK_MD5MOD;}
-[sS][tT][rR][cC][mM][pP]    {yylval.intVal = TK_STRCMP; return TK_STRCMP;}
 (?i:between)                {yylval.intVal = TK_BETWEEN; return TK_BETWEEN;}
 
 [-+]?[0-9]+   {
@@ -54,7 +52,7 @@ void yyerror(char *);
         }
     }
 
-[0-9a-zA-Z_\.]+ {  yylval.name = strndup(yytext, yyleng); /*strcpy(&yylval.name[0], yytext)*/; return TK_IDENTITY_LITERAL; }
+[0-9a-zA-Z_\.]+ {  yylval.name = strndup(yytext, yyleng); return TK_IDENTITY_LITERAL; }
 
 [-()<>=+*/;{}.,\[\]] {
                 return *yytext;
