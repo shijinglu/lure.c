@@ -15,22 +15,22 @@
 #define ANSI_COLOR_RESET "\x1b[0m"
 
 map_t example_context() {
-    static map_t m = NULL;
-    if (m == NULL) {
-        m = hashmap_new();
-        hashmap_put(m, "USER_ID", NewIntData(123));
-        hashmap_put(m, "ZERO_INT", NewIntData(0));
-        hashmap_put(m, "PI", NewDoubleData(3.14));
-        hashmap_put(m, "ZERO_REAL", NewDoubleData(0.0));
-        hashmap_put(m, "USER_TAGS", NewStringData("admin"));
-        hashmap_put(m, "EMPTY_STR", NewStringData(""));
-        hashmap_put(m, "APP_VERSION", NewVersionData("v3.2.1"));
-        hashmap_put(m, "ZERO_VERSION", NewVersionData("v0.0.0"));
-        hashmap_put(m, "MESSAGE", NewStringData("hello world"));
-        hashmap_put(m, "SWITCH", NewBoolData(true));
-        hashmap_put(m, "environment", NewStringData("Dev"));
+    static ContextPtr ctx = NULL;
+    if (ctx == NULL) {
+        ctx = NewContext();
+        setIntContext(ctx, "USER_ID", 123);
+        setIntContext(ctx, "ZERO_INT", 0);
+        setDoubleContext(ctx, "PI", 3.14);
+        setDoubleContext(ctx, "ZERO_REAL", 0.0);
+        setStringContext(ctx, "USER_TAGS", "admin");
+        setStringContext(ctx, "EMPTY_STR", "");
+        setCustomContext(ctx, "APP_VERSION", "v3.2.1", "semver");
+        setCustomContext(ctx, "ZERO_VERSION", "v0.0.0", "semver");
+        setStringContext(ctx, "MESSAGE", "hello world");
+        setBoolContext(ctx, "SWITCH", true);
+        setStringContext(ctx, "environment", "Dev");
     }
-    return m;
+    return ctx;
 }
 
 void expect(bool expectTrue, char *s, ContextPtr context) {
