@@ -79,6 +79,13 @@ void setCustomContext(ContextPtr ctx, char *key,  char *val, char *typeDesc);
 Node *lure_compile(const char *s);
 
 /**
+ * Eval with pre-compiled AST.
+ * @param node root of the compiled ast
+ * @param ctx map of context
+ */
+bool lure_compile_eval(Node *node, ContextPtr ctx);
+
+/**
  * Evaluate expression with ctx, return false in case of error.
  * @param ctx a map of context objects
  * @param s string to eval.

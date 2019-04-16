@@ -51,11 +51,14 @@ Node *lure_compile(const char *s) {
     return xp;
 }
 
-bool lure_eval(ContextPtr ctx, const char *s) {
-    Node *node = lure_compile(s);
+bool lure_compile_eval(Node *node, ContextPtr ctx) {
     Data *data = node->evaluate(node, ctx);
     bool flag = data->toBoolean(data);
-    data->clean(data); free(data); data = NULL;
-    free_node_deep(node);
+    data->clean(data); free(data);
     return flag;
+}
+
+bool lure_eval(ContextPtr ctx, const char *s) {
+    Node *node = lure_compile(s);
+    return lure_compile_eval(node, ctx);
 }
