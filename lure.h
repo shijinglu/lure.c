@@ -66,6 +66,11 @@ void setBoolContext(ContextPtr ctx, char *key,  bool val);
 void setCustomContext(ContextPtr ctx, char *key,  char *val, char *typeDesc);
 
 /**
+ * Print all entries in the context.
+ */
+void printContext(ContextPtr ctx);
+
+/**
  * Compile string into AST tree, assuming there is only one expr.
  * Example: 
  * > Node *n = lure_compile("CITY_ID == 1");

@@ -177,9 +177,14 @@ void test_mem_leak() {
     }
 }
 
+void test_context() {
+    printContext(example_context());
+}
+
 int main(int argc, const char * argv[]) {
-    test_lure_eval();
+    //    test_lure_eval();
     // test_mem_leak();
+    test_context();
     return 0;
 }
 

@@ -36,6 +36,20 @@ void setCustomContext(ContextPtr ctx, char *key,  char *val, char *typeDesc) {
     exit(-1);
 }
 
+int print_context_item(void *item, void *data) {
+    LURE_ASSERT(data != NULL, "data should not be null");
+    Data *val = (Data *)data;
+    int *idx = (int *)item;
+    printf("Context[%d]: <%s> \n", *idx, val->getCStr(val));
+    *idx = *idx + 1;
+    return MAP_OK;
+}
+
+void printContext(ContextPtr ctx) {
+    int i = 0;
+    hashmap_iterate((map_t)ctx, print_context_item, &i);
+}
+
 typedef struct yy_buffer_state *YY_BUFFER_STATE;
 extern int yyparse(NodeList **rootExprList);
 extern YY_BUFFER_STATE yy_scan_string(char *str);

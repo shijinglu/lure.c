@@ -2,8 +2,6 @@
 .vscode
 */lure
 # test projects
-parsing/
-eval/
 test_util/
 test_data/
 test_node/
